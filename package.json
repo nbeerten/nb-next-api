@@ -10,15 +10,14 @@
   },
   "dependencies": {
     "@next/font": "^13.0.6",
+    "@vercel/edge": "^0.1.2",
     "@vercel/og": "0.0.20",
     "eslint-config-next": "^13.0.6",
-    "indefinite": "^2.4.2",
     "next": "latest",
     "react": "latest",
     "react-dom": "latest"
   },
   "devDependencies": {
-    "@types/indefinite": "^2.3.1",
     "@types/node": "^18.0.6",
     "@types/react": "^18.0.15",
     "autoprefixer": "^10.4.13",

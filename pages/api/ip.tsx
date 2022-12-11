@@ -1,6 +1,6 @@
 import { ImageResponse } from '@vercel/og';
 import { NextRequest } from 'next/server';
-import indefinite from '@/packages/indefinite';
+import { geolocation, ipAddress } from '@vercel/edge';
 
 export const config = {
     runtime: 'experimental-edge',
@@ -20,11 +20,8 @@ export default async function handler(req: NextRequest) {
         const monaSansData = await monaSans;
         const hubotSansData = await hubotSans;
 
-        const { searchParams } = new URL(req.url);
-
-        const title = searchParams.get('title')?.slice(0, 100) || "Hello world";
-        const pageTypeData = searchParams.get('pagetype')?.slice(0, 25) || 'page';
-        const pageType = indefinite(pageTypeData, { capitalize: true })
+        const { city, region } = geolocation(req);
+        const ip = ipAddress(req) || 'unknown';
 
         return new ImageResponse(
             (
@@ -38,14 +35,14 @@ export default async function handler(req: NextRequest) {
                     <div id="main" tw="grow flex items-center justify-center w-full"
                         style={{ fontFamily: 'Hubot Sans', filter: 'drop-shadow(0px 10px 8px #00000014) drop-shadow(0 4px 3px #00000033)' }}>
                         <h1 tw="text-white font-extrabold text-6xl mx-0 tracking-[-1px] leading-[1.2]"
-                            >{title}</h1>
+                            >Hello world</h1>
                     </div>
 
                     <div id='bottom' tw="flex items-center justify-between w-full"
                         style={{ filter: 'drop-shadow(0px 10px 8px #00000014) drop-shadow(0 4px 3px #00000033)' }}>
                         <div tw="flex items-start justify-end flex-col">
-                            <p tw="text-neutral-400 m-0 mb-3 font-semibold text-5xl">{pageType} on</p>
-                            <p tw="text-white m-0 font-semibold text-5xl">nilsbeerten.nl</p>
+                            <p tw="text-neutral-400 m-0 mb-3 font-semibold text-5xl">{city} | {region}</p>
+                            <p tw="text-white m-0 font-semibold text-5xl">{ip}</p>
                         </div>
                         <div tw="flex h-[100px] w-[100px] items-start justify-end flex-col">
                             <svg viewBox="0 0 1024 1024" width="100" height="100" xmlns="http://www.w3.org/2000/svg" style={{ color: "white" }}>

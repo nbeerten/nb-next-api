@@ -58,10 +58,88 @@ export default async function handler(req: NextRequest) {
                 <div tw="bg-neutral-900 p-12 h-full w-full flex items-end justify-between flex-col flex-nowrap"
                     style={{
                         backgroundColor: '#171717',
-                        backgroundImage: 'radial-gradient(circle at 10px 10px, #404040 2.5%, transparent 2.5%), radial-gradient(circle at 30px 30px, #404040 2.5%, #171717 2.5%)',
+                        backgroundImage: 'radial-gradient(circle at 12.5px 12.5px, #707070 2%, transparent 2%), radial-gradient(circle at 37.5px 37.5px, #404040 2%, transparent 2%)',
                         fontFamily: 'Mona Sans',
-                        backgroundSize: '40px 40px',
+                        backgroundSize: '50px 50px',
                     }}>
+                    <div id="large-glow" tw="absolute"
+                        style={{
+                            top: "120%",
+                            right: "-60%",
+                            borderRadius: "50%",
+                            background: `linear-gradient(45deg, #ffdd33 1%, #ffc533 22%, #ffad42 31%, #ff9457 38%, #ff7a6b 44%, #ff6685 50%, #ff57a0 55%, #ff52ba 61%, #e854cf 66%, #bd5fe3 73%, #8268ee 81%, #0072f5 100%)`,
+                            opacity: "0.15",
+                            width: "800px",
+                            height: "800px",
+                            transform: "translate(-50%, -50%) rotate(1deg)",
+                            zIndex: "-1",
+                            filter: "blur(20px)",
+                        }}></div>
+                    <div id="large-glow-2" tw="absolute"
+                        style={{
+                            top: "85%",
+                            left: "65%",
+                            borderRadius: "50%",
+                            background: `linear-gradient(45deg, #ffdd33 1%, #ffc533 22%, #ffad42 31%, #ff9457 38%, #ff7a6b 44%, #ff6685 50%, #ff57a0 55%, #ff52ba 61%, #e854cf 66%, #bd5fe3 73%, #8268ee 81%, #0072f5 99%)`,
+                            opacity: "0.15",
+                            width: "200px",
+                            height: "200px",
+                            transform: "translate(-50%, -50%) rotate(-5deg)",
+                            zIndex: "-1",
+                            filter: "blur(15px)",
+                        }}></div>
+                    <div id="large-glow-3" tw="absolute"
+                        style={{
+                            top: "10%",
+                            left: "0%",
+                            borderRadius: "50%",
+                            background: `linear-gradient(45deg, #ffdd33 1%, #ffc533 22%, #ffad42 31%, #ff9457 38%, #ff7a6b 44%, #ff6685 50%, #ff57a0 55%, #ff52ba 61%, #e854cf 66%, #bd5fe3 73%, #8268ee 81%, #0072f5 99%)`,
+                            opacity: "0.15",
+                            width: "900px",
+                            height: "900px",
+                            transform: "translate(-50%, -50%) rotate(5deg)",
+                            zIndex: "-1",
+                            filter: "blur(40px)",
+                        }}></div>
+                    <div id="large-glow-4" tw="absolute"
+                        style={{
+                            top: "10%",
+                            left: "40%",
+                            borderRadius: "50%",
+                            background: `linear-gradient(45deg, #ffdd33 1%, #ffc533 22%, #ffad42 31%, #ff9457 38%, #ff7a6b 44%, #ff6685 50%, #ff57a0 55%, #ff52ba 61%, #e854cf 66%, #bd5fe3 73%, #8268ee 81%, #0072f5 99%)`,
+                            opacity: "0.12",
+                            width: "200px",
+                            height: "200px",
+                            transform: "translate(-50%, -50%) rotate(5deg)",
+                            zIndex: "-1",
+                            filter: "blur(20px)",
+                        }}></div>
+                    <div id="large-glow-4" tw="absolute"
+                        style={{
+                            top: "140%",
+                            left: "30%",
+                            borderRadius: "50%",
+                            background: `linear-gradient(0deg, #ffdd33 1%, #ffc533 22%, #ffad42 31%, #ff9457 38%, #ff7a6b 44%, #ff6685 50%, #ff57a0 55%, #ff52ba 61%, #e854cf 66%, #bd5fe3 73%, #8268ee 81%, #0072f5 99%)`,
+                            opacity: "0.10",
+                            width: "700px",
+                            height: "700px",
+                            transform: "translate(-50%, -50%) rotate(5deg)",
+                            zIndex: "-1",
+                            filter: "blur(20px)",
+                        }}></div>
+                    <div id="large-glow-5" tw="absolute"
+                        style={{
+                            top: "10%",
+                            left: "90%",
+                            borderRadius: "50%",
+                            background: `linear-gradient(45deg, #ffdd33 1%, #ffc533 22%, #ffad42 31%, #ff9457 38%, #ff7a6b 44%, #ff6685 50%, #ff57a0 55%, #ff52ba 61%, #e854cf 66%, #bd5fe3 73%, #8268ee 81%, #0072f5 99%)`,
+                            opacity: "0.12",
+                            width: "500px",
+                            height: "500px",
+                            transform: "translate(-50%, -50%) rotate(-5deg)",
+                            zIndex: "-2",
+                            filter: "blur(20px)",
+                        }}></div>
                     <div id="main" tw="grow flex items-center justify-center w-full"
                         style={{ fontFamily: 'Hubot Sans', filter: 'drop-shadow(0px 10px 8px #00000014) drop-shadow(0 4px 3px #00000033)' }}>
                         <h1 tw="text-white font-extrabold text-6xl mx-0 tracking-[-1px] leading-[1.2]"

@@ -16,7 +16,8 @@ const key = crypto.subtle.importKey(
 
 function toHex(arrayBuffer: ArrayBuffer): string {
     return Array.prototype.map
-        .call(new Uint8Array(arrayBuffer), (n: any) => n.toString(16).padStart(2, '0'))
+        .call(new Uint8Array(arrayBuffer), 
+              (n: any) => n.toString(16).padStart(2, '0'))
         .join('');
 };
 

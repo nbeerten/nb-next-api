@@ -1,5 +1,5 @@
 import { ImageResponse } from '@vercel/og';
-import { NextRequest } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import indefinite from '@/packages/indefinite';
 
 export const config = {
@@ -16,10 +16,22 @@ const key = crypto.subtle.importKey(
 
 function toHex(arrayBuffer: ArrayBuffer): string {
     return Array.prototype.map
-        .call(new Uint8Array(arrayBuffer), 
-              (n: any) => n.toString(16).padStart(2, '0'))
+        .call(new Uint8Array(arrayBuffer),
+            (n: any) => n.toString(16).padStart(2, '0'))
         .join('');
 };
+
+async function verifyToken(token: string, tokenifiedParams: object): Promise<boolean> {
+    const validationToken = toHex(
+        await crypto.subtle.sign(
+            'HMAC',
+            await key,
+            new TextEncoder().encode(JSON.stringify(tokenifiedParams)),
+        )
+    );
+
+    return (token === validationToken);
+}
 
 const hubotSans = fetch(new URL('@/assets/fonts/Hubot-Sans-ExtraBoldWide-subset.ttf', import.meta.url)).then(
     (res) => res.arrayBuffer(),
@@ -29,29 +41,27 @@ const monaSans = fetch(new URL('@/assets/fonts/Mona-Sans-SemiBoldWide-subset.ttf
     (res) => res.arrayBuffer(),
 );
 
-export default async function handler(req: NextRequest) {
+export default async function handler(req: NextRequest): Promise<NextResponse | ImageResponse> {
     try {
         const { searchParams } = new URL(req.url);
-        const title = searchParams.get('title');
-        const pagetype = searchParams.get('pagetype');
-        const token = searchParams.get('token');
+        const title: string = searchParams.get('title'),
+            pagetype: string = searchParams.get('pagetype'),
+            token: string = searchParams.get('token'),
+            width: number = parseInt(searchParams.get('w')) || 1200,
+            height: number = parseInt(searchParams.get('h')) || 600,
+            debug: boolean = (searchParams.get('debug')?.toLowerCase() === "true") || false;
 
-        const verifyToken = toHex(
-            await crypto.subtle.sign(
-                'HMAC',
-                await key,
-                new TextEncoder().encode(JSON.stringify({ title, pagetype })),
-            ),
-        );
+        console.time('Image Generation');
 
-        if (token !== verifyToken) return new Response('Invalid token.', { status: 401 });
+        const tokenifiedParams = { title, pagetype };
 
+        if (!verifyToken(token, tokenifiedParams)) return new NextResponse(null, { status: 401, statusText: "Unauthorized" });
 
         const monaSansData = await monaSans;
         const hubotSansData = await hubotSans;
 
-        const pageTypeData = pagetype.slice(0, 25) || 'page';
-        const pageType = indefinite(pageTypeData, { capitalize: true })
+        let pageType = pagetype.slice(0, 25) || 'page';
+        pageType = indefinite(pageType, { capitalize: true })
 
         return new ImageResponse(
             (
@@ -85,8 +95,9 @@ export default async function handler(req: NextRequest) {
                 </div>
             ),
             {
-                width: 1200,
-                height: 600,
+                width: width,
+                height: height,
+                debug: debug,
                 fonts: [
                     {
                         name: 'Hubot Sans',
@@ -102,9 +113,9 @@ export default async function handler(req: NextRequest) {
             },
         );
     } catch (error: any) {
-        console.log(`${error.message}`);
-        return new Response(`Failed to generate the image`, {
-            status: 500,
-        });
+        console.error(error, error.stack);
+        return new NextResponse(null, { status: 500, statusText: "Internal Server Error" });
+    } finally {
+        console.timeEnd('Image Generation');
     }
 }

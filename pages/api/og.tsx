@@ -21,18 +21,6 @@ function toHex(arrayBuffer: ArrayBuffer): string {
         .join('');
 };
 
-async function verifyToken(token: string, tokenifiedParams: object): Promise<boolean> {
-    const validationToken = toHex(
-        await crypto.subtle.sign(
-            'HMAC',
-            await key,
-            new TextEncoder().encode(JSON.stringify(tokenifiedParams)),
-        )
-    );
-
-    return (token === validationToken);
-}
-
 const hubotSans = fetch(new URL('@/assets/fonts/Hubot-Sans-ExtraBoldWide-subset.ttf', import.meta.url)).then(
     (res) => res.arrayBuffer(),
 );
@@ -44,21 +32,28 @@ const monaSans = fetch(new URL('@/assets/fonts/Mona-Sans-SemiBoldWide-subset.ttf
 export default async function handler(req: NextRequest): Promise<NextResponse | ImageResponse> {
     try {
         const { searchParams } = new URL(req.url);
-        const title: string = searchParams.get('title'),
-            pagetype: string = searchParams.get('pagetype'),
-            token: string = searchParams.get('token'),
-            width: number = parseInt(searchParams.get('w')) || 1200,
-            height: number = parseInt(searchParams.get('h')) || 600,
-            debug: boolean = (searchParams.get('debug')?.toLowerCase() === "true") || false;
+        const title: string = searchParams.get('title').slice(0, 100) || 'Hello world';
+        const pagetype: string = searchParams.get('pagetype').slice(0, 25) || 'page';
+        const token: string = searchParams.get('token');
+        // const width: number = parseInt(searchParams.get('w')) || 1200;
+        // const height: number = parseInt(searchParams.get('h')) || 600;
+        // const debug: boolean = (searchParams.get('debug')?.toLowerCase() === "true") || false;
 
         const tokenifiedParams = { title, pagetype };
+        const validationToken = toHex(
+            await crypto.subtle.sign(
+                'HMAC',
+                await key,
+                new TextEncoder().encode(JSON.stringify(tokenifiedParams)),
+            )
+        );
 
-        if (await verifyToken(token, tokenifiedParams) === false) return new NextResponse(null, { status: 401, statusText: "Unauthorized" });
+        if (token !== validationToken) return new NextResponse(null, { status: 401, statusText: "Unauthorized" });
 
         const monaSansData = await monaSans;
         const hubotSansData = await hubotSans;
 
-        const pageType = indefinite(pagetype.slice(0, 25) || 'page' , { capitalize: true })
+        const pageType = indefinite(pagetype, { capitalize: true })
 
         return new ImageResponse(
             (
@@ -92,9 +87,8 @@ export default async function handler(req: NextRequest): Promise<NextResponse | 
                 </div>
             ),
             {
-                width: width,
-                height: height,
-                debug: debug,
+                width: 1200,
+                height: 600,
                 fonts: [
                     {
                         name: 'Hubot Sans',

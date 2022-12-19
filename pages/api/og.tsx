@@ -5,22 +5,6 @@ import indefinite from '@/packages/indefinite';
 export const config = {
     runtime: 'experimental-edge',
 };
-
-const key = crypto.subtle.importKey(
-    'raw',
-    new TextEncoder().encode(process.env.OG_HMAC_SECRET),
-    { name: 'HMAC', hash: { name: 'SHA-1' } },
-    false,
-    ['sign'],
-);
-
-function toHex(arrayBuffer: ArrayBuffer): string {
-    return Array.prototype.map
-        .call(new Uint8Array(arrayBuffer),
-            (n: any) => n.toString(16).padStart(2, '0'))
-        .join('');
-};
-
 const hubotSans = fetch(new URL('@/assets/fonts/Hubot-Sans-ExtraBoldWide-subset.ttf', import.meta.url)).then(
     (res) => res.arrayBuffer(),
 );
@@ -34,26 +18,11 @@ export default async function handler(req: NextRequest): Promise<NextResponse | 
         const { searchParams } = new URL(req.url);
         const title: string = searchParams.get('title').slice(0, 100) || 'Hello world';
         const pagetype: string = searchParams.get('pagetype').slice(0, 25) || 'page';
-        const token: string = searchParams.get('token');
-        // const width: number = parseInt(searchParams.get('w')) || 1200;
-        // const height: number = parseInt(searchParams.get('h')) || 600;
-        // const debug: boolean = (searchParams.get('debug')?.toLowerCase() === "true") || false;
-
-        const tokenifiedParams = { title, pagetype };
-        const validationToken = toHex(
-            await crypto.subtle.sign(
-                'HMAC',
-                await key,
-                new TextEncoder().encode(JSON.stringify(tokenifiedParams)),
-            )
-        );
-
-        if (token !== validationToken) return new NextResponse(null, { status: 401, statusText: "Unauthorized" });
 
         const monaSansData = await monaSans;
         const hubotSansData = await hubotSans;
 
-        const pageType = indefinite(pagetype, { capitalize: true })
+        const pageType = indefinite(pagetype, { capitalize: true });
 
         return new ImageResponse(
             (

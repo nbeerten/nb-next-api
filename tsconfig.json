@@ -33,7 +33,7 @@
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts", 
-    "packages/indefinite/lib/indefinite.js"  ],
+    "packages/indefinite/index.ts"],
   "exclude": [
     "node_modules"
   ],

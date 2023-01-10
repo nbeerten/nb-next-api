@@ -9,9 +9,9 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@next/font": "^13.0.6",
-    "@vercel/edge": "^0.1.2",
-    "@vercel/og": "0.0.20",
+    "@next/font": "latest",
+    "@vercel/edge": "latest",
+    "@vercel/og": "latest",
     "eslint-config-next": "^13.0.6",
     "next": "latest",
     "react": "latest",
